@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="referrer" content="no-referrer">
+    <title>微信圣诞树生成器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            min-height: 100vh;
+            background-color: #1a1a2e;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 10px;
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+        .container {
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        h1 {
+            color: #f1c40f;
+            margin-bottom: 25px;
+            font-size: 22px;
+            text-shadow: 0 0 8px #f1c40f;
+        }
+        .input-group {
+            margin-bottom: 25px;
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        input {
+            padding: 10px 12px;
+            width: 80px;
+            border: none;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            background-color: #2ecc71;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            touch-action: manipulation;
+        }
+        button:hover {
+            background-color: #27ae60;
+        }
+        #tree-container {
+            font-size: 18px;
+            line-height: 1.2;
+            margin-top: 20px;
+            font-family: monospace;
+            white-space: pre-line;
+        }
+        .message {
+            color: #f1c40f;
+            margin-top: 15px;
+            font-size: 15px;
+        }
+        .decor {
+            text-shadow: 0 0 5px currentColor;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✨ 微信圣诞树生成器 ✨</h1>
+        <div class="input-group">
+            <input type="number" id="tree-height" placeholder="高度(5-15)" min="5" max="15" value="8">
+            <button onclick="generateTree()">生成圣诞树</button>
+            <button onclick="resetTree()">重置</button>
+        </div>
+        <div id="tree-container"></div>
+        <div class="message" id="message">点击按钮开始生成吧！</div>
+    </div>
+
+    <script>
+        let flashInterval = null;
+        const colors = ['#2ecc71', '#e74c3c', '#3498db', '#f1c40f', '#9b59b6', '#1abc9c'];
+        const decorChars = ['●', '★', '◆'];
+
+        function generateTree() {
+            const height = parseInt(document.getElementById('tree-height').value);
+            const container = document.getElementById('tree-container');
+            const message = document.getElementById('message');
+
+            if (flashInterval) clearInterval(flashInterval);
+            if (isNaN(height) || height < 5 || height > 15) {
+                message.textContent = "请输入 5-15 之间的有效高度！";
+                container.innerHTML = "";
+                return;
+            }
+
+            let tree = "";
+            for (let i = 0; i < height; i++) {
+                let space = " ".repeat(height - i - 1);
+                let line = "";
+                for (let k = 0; k < 2 * i + 1; k++) {
+                    if (Math.random() < 0.2) {
+                        const color = colors[Math.floor(Math.random() * colors.length)];
+                        const char = decorChars[Math.floor(Math.random() * decorChars.length)];
+                        line += `<span class="decor" style="color:${color}">${char}</span>`;
+                    } else {
+                        line += `<span style="color:#2ecc71">*</span>`;
+                    }
+                }
+                tree += space + line + "<br>";
+            }
+
+            const trunkSpace = " ".repeat(height - 2);
+            const trunk = trunkSpace + `<span style="color:#8b4513">###</span><br>` + 
+                          trunkSpace + `<span style="color:#8b4513">###</span>`;
+            tree += trunk;
+
+            container.innerHTML = tree;
+            message.textContent = "Merry Christmas 🎄！";
+            startFlash();
+        }
+
+        function startFlash() {
+            const decors = document.querySelectorAll('.decor');
+            flashInterval = setInterval(() => {
+                decors.forEach(decor => {
+                    decor.style.opacity = Math.random() > 0.5 ? 1 : 0.2;
+                });
+            }, 500);
+        }
+
+        function resetTree() {
+const decors = document.querySelectorAll('.decor');
+            flashInterval = setInterval(() => {
+                decors.forEach(decor => {
+                    decor.style.opacity = Math.random() > 0.5 ? 1 : 0.2;
+                });
+            }, 500);
+        }
+
+        function resetTree() {
+            const container = document.getElementById('tree-container');
+            const message = document.getElementById('message');
+            if (flashInterval) clearInterval(flashInterval);
+            container.innerHTML = "";
+            message.textContent = "点击按钮开始生成吧！";
+            document.getElementById('tree-height').value = 8;
+        }
+    </script>
+</body>
+</html>
